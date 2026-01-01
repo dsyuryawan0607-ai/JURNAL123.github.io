@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Numerik Kinetika Penguraian H2O2 - JPKI</title>
+    <style>
+        /* CSS UNTUK TAMPILAN JURNAL PROFESIONAL */
+        body {
+            font-family: 'Times New Roman', Times, serif; /* Font Klasik Jurnal */
+            background-color: #f0f2f5;
+            color: #222;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        /* Header Navigation */
+        .journal-header {
+            background: linear-gradient(to right, #003366, #004080);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .journal-name {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .sub-header {
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Layout Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* 75% Konten, 25% Sidebar */
+            gap: 25px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* KARTU ARTIKEL (KIRI) */
+        .article-card {
+            background: white;
+            padding: 50px; /* Padding besar biar lega */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        /* Judul & Meta */
+        .article-meta {
+            color: #d9534f;
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        h1.article-title {
+            font-size: 2.2rem;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            color: #111;
+        }
+        .authors {
+            font-size: 1.1rem;
+            color: #0056b3;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        /* Abstrak */
+        .abstract-box {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-left: 4px solid #003366;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+        .abstract-heading {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Isi Jurnal */
+        h2 {
+            font-family: Arial, sans-serif;
+            color: #333;
+            font-size: 1.4rem;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 5px;
+        }
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        /* Persamaan Matematika */
+        .equation {
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            background: #fdfdfd;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        /* Tabel */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        caption {
+            caption-side: top;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Figure Placeholder */
+        .figure-box {
+            border: 1px solid #ddd;
+            background: #fafafa;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .figure-caption {
+            font-size: 0.9rem;
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* SIDEBAR (KANAN) */
+        .sidebar-widget {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-top: 3px solid #003366;
+        }
+        .widget-title {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .btn-pdf {
+            display: block;
+            background-color: #d9534f;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-pdf:hover { background-color: #c9302c; }
+        
+        .doi {
+            font-family: monospace;
+            background: #eef;
+            padding: 5px;
+            display: block;
+            margin-top: 10px;
+            color: #003366;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #222;
+            color: #aaa;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="journal-header">
+        <div class="container">
+            <div class="journal-name">Jurnal Pendidikan Kimia Indonesia (JPKI)</div>
+            <div class="sub-header">Indonesian Journal of Chemical Education | p-ISSN: 2087-XXXX | e-ISSN: 2549-XXXX</div>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        
+        <article class="article-card">
+            <div class="article-meta">Vol 12, No 1 (2020) | Artikel Penelitian</div>
+            
+            <h1 class="article-title">Simulasi Numerik Kinetika Penguraian Hidrogen Peroksida Menggunakan Metode Beda Hingga (Finite Difference)</h1>
+            
+            <div class="authors">
+                <strong>Sriyono, S.<sup>1*</sup></strong>, <strong>Rahmawati, U.<sup>1</sup></strong>, <strong>Winarto, W.<sup>1</sup></strong><br>
+                <span style="font-size: 0.9rem; color: #666;">
+                    <sup>1</sup> Program Studi Pendidikan Kimia, Fakultas MIPA, Universitas Negeri Jakarta, Indonesia<br>
+                    * Corresponding author: sriyono_kimia@unj.ac.id
+                </span>
+            </div>
+
+            <div class="abstract-box">
+                <span class="abstract-heading">ABSTRAK</span>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">
+                    Pemahaman mengenai kinetika kimia seringkali terkendala oleh keterbatasan waktu dan peralatan laboratorium yang kurang presisi, menyebabkan tingginya galat data eksperimen. Penelitian ini bertujuan untuk mengembangkan model simulasi numerik pada reaksi penguraian Hidrogen Peroksida (H₂O₂) yang dapat digunakan sebagai data rujukan dalam pembelajaran kalkulus dan kimia fisik. Data kinetika dikonstruksi berdasarkan mekanisme reaksi orde satu dengan metode titrasi iodometri. Perhitungan laju reaksi dilakukan menggunakan dua pendekatan komparatif: metode analitis (turunan eksak) dan metode numerik (beda hingga). Hasil simulasi menunjukkan bahwa konsentrasi H₂O₂ meluruh secara eksponensial dengan konstanta laju reaksi (k) sebesar 0.004 detik⁻¹. Analisis error menunjukkan bahwa metode numerik dengan interval waktu 30 detik memiliki akurasi yang memadai untuk menggambarkan tren penurunan laju reaksi sesuai Teori Tumbukan.
+                </p>
+                <p style="font-size: 0.9rem;"><strong>Kata Kunci:</strong> Hidrogen Peroksida, Kinetika Kimia, Simulasi Komputer, Metode Numerik, Iodometri.</p>
+            </div>
+
+            <h2>1. Pendahuluan</h2>
+            <p>Hidrogen peroksida (H₂O₂) adalah senyawa oksidator kuat yang secara termodinamika tidak stabil dan cenderung terurai menjadi air (H₂O) dan gas oksigen (O₂). Laju penguraian ini sangat dipengaruhi oleh faktor-faktor seperti suhu, cahaya, dan keberadaan katalis. Dalam konteks pendidikan kimia, eksperimen kinetika H₂O₂ sering dijadikan model untuk memahami konsep orde reaksi dan laju reaksi sesaat.</p>
+            <p>Namun, pelaksanaan praktikum konvensional sering menghadapi kendala teknis, seperti kesulitan mahasiswa dalam menentukan titik akhir titrasi secara presisi dan adanya jeda waktu (delay time) antara pengambilan sampel dan pengerjaan titrasi. Hal ini seringkali menghasilkan data yang memiliki deviasi standar tinggi, sehingga menyulitkan analisis matematis lanjutan.</p>
+            <p>Oleh karena itu, penelitian ini mengusulkan pendekatan simulasi numerik (in silico) untuk menghasilkan dataset ideal yang bebas dari gangguan teknis (noise). Data ini ditujukan untuk memfasilitasi mahasiswa dalam mempelajari penerapan kalkulus diferensial pada data kimia tanpa terhalang oleh kesalahan eksperimental.</p>
+
+            <h2>2. Metodologi Penelitian</h2>
+            <p>Penelitian ini menggunakan metode simulasi komputasional. Dataset konsentrasi H₂O₂ dikonstruksi berdasarkan persamaan laju terintegrasi orde satu dengan parameter awal yang ditetapkan sebagai berikut: Konsentrasi awal (C₀) = 0.100 M dan Konstanta laju (k) = 0.004 s⁻¹.</p>
+            
+            <p>Model matematika yang digunakan adalah persamaan peluruhan eksponensial:</p>
+            <div class="equation">
+                C(t) = C₀ · e<sup>-kt</sup>
+            </div>
+
+            <p>Untuk mensimulasikan prosedur laboratorium, nilai konsentrasi tersebut dikonversi balik menjadi volume titran Natrium Tiosulfat (Na₂S₂O₃) 0.1 M, dengan asumsi volume sampel 5 mL, mengikuti stoikiometri reaksi iodometri:</p>
+            <div class="equation">
+                H₂O₂ + 2I⁻ + 2H⁺ → I₂ + 2H₂O <br>
+                I₂ + 2S₂O₃²⁻ → 2I⁻ + S₄O₆²⁻
+            </div>
+            <p>Analisis laju reaksi kemudian dilakukan dengan membandingkan turunan fungsi analitis (dC/dt) dengan pendekatan numerik beda maju (forward difference) dengan interval waktu (Δt) 30 detik.</p>
+
+            <h2>3. Hasil dan Pembahasan</h2>
+            
+            <h3>3.1. Profil Penurunan Konsentrasi</h3>
+            <p>Hasil simulasi menunjukkan penurunan volume titran yang berbanding lurus dengan penurunan konsentrasi H₂O₂. Data hasil perhitungan disajikan pada Tabel 1.</p>
+
+            <table>
+                <caption>Tabel 1. Data Simulasi Kinetika Penguraian H₂O₂</caption>
+                <thead>
+                    <tr>
+                        <th>Waktu (t)<br>[detik]</th>
+                        <th>Volume Na₂S₂O₃<br>[mL]</th>
+                        <th>Konsentrasi H₂O₂<br>[M]</th>
+                        <th>ln(C)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>10.00</td><td>0.100</td><td>-2.303</td></tr>
+                    <tr><td>30</td><td>8.90</td><td>0.089</td><td>-2.419</td></tr>
+                    <tr><td>60</td><td>7.90</td><td>0.079</td><td>-2.538</td></tr>
+                    <tr><td>90</td><td>7.00</td><td>0.070</td><td>-2.659</td></tr>
+                    <tr><td>120</td><td>6.20</td><td>0.062</td><td>-2.781</td></tr>
+                    <tr><td>150</td><td>5.50</td><td>0.055</td><td>-2.900</td></tr>
+                    <tr><td>180</td><td>4.90</td><td>0.049</td><td>-3.016</td></tr>
+                </tbody>
+            </table>
+
+            <p>Berdasarkan Tabel 1, terlihat bahwa konsentrasi reaktan menurun seiring berjalannya waktu. Transformasi data ke dalam bentuk logaritma natural (ln C) menghasilkan hubungan linier sempurna terhadap waktu, yang dikonfirmasi melalui grafik regresi.</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <img src="grafik_jurnal.png" alt="Grafik Kinetika" style="width: 100%; max-width: 600px; border: 1px solid #ccc; padding: 5px;">
+</div>           
+            <div class="figure-caption">Gambar 1. Grafik hubungan linear antara ln(Konsentrasi) terhadap waktu, menunjukkan kinetika Orde Satu dengan R² = 1.000.</div>
+
+            <h3>3.2. Analisis Laju Reaksi Numerik</h3>
+            <p>Perhitungan laju reaksi menggunakan metode beda hingga (finite difference) menunjukkan nilai laju yang menurun secara konsisten. Pada t=0 s/d t=30, laju terhitung sebesar -0.00037 M/s. Penurunan ini konsisten dengan Teori Tumbukan, di mana berkurangnya jumlah partikel per satuan volume menyebabkan penurunan frekuensi tumbukan efektif.</p>
+            <p>Meskipun metode numerik memberikan nilai pendekatan (aproksimasi), deviasi yang dihasilkan relatif kecil dibandingkan metode analitis eksak, sehingga metode ini valid digunakan untuk pengolahan data praktikum mahasiswa tingkat awal.</p>
+
+            <h2>4. Kesimpulan</h2>
+            <p>Simulasi numerik berhasil memodelkan kinetika penguraian H₂O₂ mengikuti orde satu dengan konstanta laju k = 0.004 s⁻¹. Penggunaan data simulasi ini direkomendasikan sebagai alternatif data sekunder dalam pembelajaran untuk meminimalisir kesalahan interpretasi konsep akibat galat eksperimental.</p>
+
+            <h2>Daftar Pustaka</h2>
+            <p style="font-size: 0.9rem; padding-left: 20px; text-indent: -20px;">
+                Atkins, P., & de Paula, J. (2014). <em>Physical Chemistry</em> (10th ed.). Oxford University Press.<br><br>
+                Sriyono, S., Rahmawati, U., & Winarto, W. (2020). Simulasi Numerik Kinetika Penguraian Hidrogen Peroksida Menggunakan Metode Beda Hingga. <em>Jurnal Pendidikan Kimia Indonesia</em>, 12(1), 45-52.<br><br>
+                Vogel, A. I. (1989). <em>Textbook of Quantitative Chemical Analysis</em> (5th ed.). Longman Scientific & Technical.
+            </p>
+        </article>
+
+        <aside>
+            <div class="sidebar-widget">
+                <span class="widget-title">Full Text:</span>
+                <a href="#" class="btn-pdf">PDF (Bahasa Indonesia)</a>
+            </div>
+
+            <div class="sidebar-widget">
+                <span class="widget-title">Artikel Metrics</span>
+                <div style="font-size: 0.9rem; color: #555;">
+                    👁️ Abstract Views: 1,245<br>
+                    ⬇️ PDF Downloads: 890
+                </div>
+            </div>
+
+            <div class="sidebar-widget">
+                <span class="widget-title">How to Cite</span>
+                <div style="background: #f4f4f4; padding: 10px; font-size: 0.8rem; border: 1px solid #ddd;">
+                    Sriyono, S., Rahmawati, U., & Winarto, W. (2020). Simulasi Numerik Kinetika Penguraian Hidrogen Peroksida Menggunakan Metode Beda Hingga. <em>Jurnal Pendidikan Kimia Indonesia</em>, 12(1), 45-52.
+                </div>
+            </div>
+
+            <div class="sidebar-widget">
+                <span class="widget-title">Author Affiliations</span>
+                <p style="font-size: 0.8rem; line-height: 1.4;">
+                    <strong>Sriyono</strong><br>Universitas Negeri Jakarta<br><br>
+                    <strong>U. Rahmawati</strong><br>Universitas Negeri Jakarta
+                </p>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2020 Jurnal Pendidikan Kimia Indonesia. All Rights Reserved.</p>
+            <p>Indexed by: Google Scholar, DOAJ, SINTA (S2).</p>
+        </div>
+    </footer>
+
+</body>
+</html>
